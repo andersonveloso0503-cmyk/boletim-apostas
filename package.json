@@ -1,0 +1,13 @@
+{
+  "name": "boletim-apostas",
+  "version": "0.1.0",
+  "description": "Boletim de apostas esportivas — gerado automaticamente a partir de dados reais (APWin), toda rodada.",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  }
+}
