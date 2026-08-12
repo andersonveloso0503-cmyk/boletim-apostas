@@ -244,30 +244,6 @@
     white-space: nowrap;
   }
 
-  .prob-bar{
-    display:flex;
-    height: 18px;
-    border-radius: 4px;
-    overflow:hidden;
-    margin-top: 10px;
-    border: 1px solid var(--card-border);
-  }
-  .prob-seg{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-family: var(--mono);
-    font-size: 9.5px;
-    color: var(--pitch-dark);
-    font-weight: 700;
-    min-width: 0;
-    overflow:hidden;
-    white-space:nowrap;
-  }
-  .prob-seg.home{ background: var(--chalk); }
-  .prob-seg.draw{ background: var(--chalk-dim); color: var(--pitch-dark); }
-  .prob-seg.away{ background: var(--amber); }
-
   .tips{
     margin-top: 10px;
     border-top: 1px dashed var(--card-border);
@@ -305,89 +281,12 @@
     margin-top: 8px;
   }
 
-  /* Results */
-  .results-grid{
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px,1fr));
-    gap: 8px;
-  }
-  .result-card{
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 6px;
-    padding: 10px 14px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: 8px;
-  }
-  .result-card .rteams{
-    font-family: var(--display);
-    font-size: 12.5px;
-    text-transform: uppercase;
-    line-height: 1.3;
-  }
-  .result-card .rscore{
-    font-family: var(--mono);
-    font-weight:700;
-    font-size: 15px;
-    color: var(--amber);
-    white-space: nowrap;
-  }
-  .postponed-note{
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--chalk-dim);
-    margin-top: 10px;
-    font-style: italic;
-  }
   .no-results{
     font-family: var(--mono);
     font-size: 11.5px;
     color: var(--chalk-dim);
     font-style: italic;
   }
-
-  /* Standings table */
-  .standings-wrap{
-    overflow-x: auto;
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-  }
-  table.standings{
-    width: 100%;
-    border-collapse: collapse;
-    font-family: var(--mono);
-    font-size: 11.5px;
-    min-width: 480px;
-  }
-  table.standings th{
-    text-align: left;
-    padding: 8px 10px;
-    color: var(--amber);
-    text-transform: uppercase;
-    font-size: 10px;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--card-border);
-    white-space: nowrap;
-  }
-  table.standings td{
-    padding: 7px 10px;
-    border-bottom: 1px solid var(--pitch-line);
-    white-space: nowrap;
-  }
-  table.standings td.team-name{
-    font-family: var(--body);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 12px;
-    white-space: normal;
-  }
-  table.standings tr:nth-child(even){ background: rgba(245,241,232,0.02); }
-  table.standings tr.zone-g6 td.pos{ color: var(--ok); font-weight:700; }
-  table.standings tr.zone-z4 td.pos{ color: var(--risk); font-weight:700; }
-  table.standings td.num{ text-align: center; }
-  table.standings td.pts{ text-align: center; font-weight: 700; color: var(--chalk); }
 
   footer{
     max-width: 680px;
@@ -425,7 +324,7 @@
       <strong>Sobre os números:</strong> nenhuma estatística garante resultado. Futebol tem variância — use isso como apoio à decisão, nunca como certeza. Aposte com responsabilidade, defina um limite antes de começar e pare se deixar de ser divertido.
     </div>
     <div class="disclaimer">
-      <strong>Sobre os dados:</strong> ligas europeias — resultado vem de um modelo preditivo real (Sportradar); gols, escanteios e cartões aparecem como indisponíveis porque a temporada 2026/27 ainda não começou. Brasileirão (dados reais até a 22ª rodada) — resultado e gols vêm de heurística própria a partir da tabela (CBF/Lance!); escanteios e cartões vêm de médias reais de temporada por time (APWin). Nenhum desses é uma probabilidade calibrada tipo a do modelo europeu — são leituras de tendência, trate como apoio, não como certeza.
+      <strong>Sobre os dados:</strong> favorito e mercado de gols vêm de uma heurística própria a partir da tabela de classificação (aproveitamento de pontos + bônus de mando de campo); escanteios e cartões vêm de médias reais de temporada por time. Tudo direto da APWin, no momento em que este boletim foi gerado. Não é uma probabilidade calibrada — é leitura de tendência, trate como apoio, não como certeza.
     </div>
   </details>
 </header>
@@ -438,7 +337,7 @@
 
 <footer>
   <div class="rule"></div>
-  Dados de jogos e probabilidades das ligas europeias via provedor esportivo em tempo real (Sportradar). Tabela, fixtures e resultados do Brasileirão via CBF/Lance!, médias de escanteios e cartões via APWin, consultados no momento da geração deste boletim (rodada 22, 08–09/08/2026). Times, horários, tabela e médias mudam a cada rodada — revalide antes de apostar.
+  Tabela, jogos e médias de escanteios/cartões via APWin, consultados em <span id="generated-at"></span>. Times, horários, tabela e médias mudam a cada rodada — revalide antes de apostar.
 </footer>
 
 <script>
@@ -448,347 +347,11 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// ---------- EUROPEAN LEAGUES (real win-probability model) ----------
-const EU_LEAGUES = [
-  {
-    key: "epl", name: "Premier League",
-    games: [
-      {home:"ARS",away:"COV",teams:{ARS:"Arsenal",COV:"Coventry City"},time:"Sex 21 Ago, 16:00",wp:{ARS:82.7,COV:5.4,draw:11.9}},
-      {home:"HUL",away:"MUN",teams:{HUL:"Hull City",MUN:"Manchester United"},time:"Sáb 22 Ago, 08:30",wp:{HUL:13.2,MUN:67,draw:19.8}},
-      {home:"EVE",away:"CRY",teams:{EVE:"Everton",CRY:"Crystal Palace"},time:"Sáb 22 Ago, 11:00",wp:{EVE:44.9,CRY:27.7,draw:27.4}},
-      {home:"IPS",away:"SUN",teams:{IPS:"Ipswich Town",SUN:"Sunderland"},time:"Sáb 22 Ago, 11:00",wp:{IPS:34.8,SUN:36.6,draw:28.6}},
-      {home:"NFO",away:"LEE",teams:{NFO:"Nottingham Forest",LEE:"Leeds United"},time:"Sáb 22 Ago, 11:00",wp:{NFO:42.8,LEE:29.5,draw:27.7}},
-      {home:"BRE",away:"TOT",teams:{BRE:"Brentford",TOT:"Tottenham"},time:"Sáb 22 Ago, 13:30",wp:{BRE:40.2,TOT:33.8,draw:26}},
-      {home:"BRI",away:"AVL",teams:{BRI:"Brighton",AVL:"Aston Villa"},time:"Dom 23 Ago, 10:00",wp:{BRI:41.6,AVL:32.6,draw:25.8}},
-      {home:"MCI",away:"BOU",teams:{MCI:"Manchester City",BOU:"Bournemouth"},time:"Dom 23 Ago, 10:00",wp:{MCI:65.6,BOU:16,draw:18.4}},
-      {home:"NEW",away:"LFC",teams:{NEW:"Newcastle",LFC:"Liverpool"},time:"Dom 23 Ago, 12:30",wp:{NEW:29.7,LFC:45.7,draw:24.6}},
-      {home:"FUL",away:"CFC",teams:{FUL:"Fulham",CFC:"Chelsea"},time:"Seg 24 Ago, 16:00",wp:{FUL:30.6,CFC:43.4,draw:26}}
-    ]
-  },
-  {
-    key: "la_liga", name: "La Liga",
-    games: [
-      {home:"ALA",away:"GET",teams:{ALA:"Alavés",GET:"Getafe"},time:"Sáb 15 Ago, 14:30",wp:{ALA:40,GET:26.4,draw:33.6}},
-      {home:"SEV",away:"RVC",teams:{SEV:"Sevilla",RVC:"Rayo Vallecano"},time:"Sáb 15 Ago, 16:30",wp:{SEV:41.7,RVC:28.6,draw:29.7}},
-      {home:"RAC",away:"VIL",teams:{RAC:"Racing Santander",VIL:"Villarreal"},time:"Dom 16 Ago, 12:00",wp:{RAC:28.1,VIL:44.5,draw:27.4}},
-      {home:"ESP",away:"LEV",teams:{ESP:"Espanyol",LEV:"Levante"},time:"Dom 16 Ago, 14:00",wp:{ESP:46.8,LEV:24.8,draw:28.4}},
-      {home:"RCC",away:"OSA",teams:{RCC:"Celta de Vigo",OSA:"Osasuna"},time:"Dom 16 Ago, 16:30",wp:{RCC:47,OSA:24.9,draw:28.1}},
-      {home:"DEP",away:"ELC",teams:{DEP:"Deportivo La Coruña",ELC:"Elche"},time:"Seg 17 Ago, 16:00",wp:{DEP:42,ELC:28.3,draw:29.7}},
-      {home:"ATM",away:"MCF",teams:{ATM:"Atlético Madrid",MCF:"Málaga"},time:"Qua 19 Ago, 16:00",wp:{ATM:72.8,MCF:9.8,draw:17.4}},
-      {home:"RVC",away:"ALA",teams:{RVC:"Rayo Vallecano",ALA:"Alavés"},time:"Qui 20 Ago, 16:00",wp:{RVC:44.9,ALA:24,draw:31.1}},
-      {home:"RBB",away:"RSO",teams:{RBB:"Real Betis",RSO:"Real Sociedad"},time:"Sex 21 Ago, 16:00",wp:{RBB:43.4,RSO:27.8,draw:28.8}},
-      {home:"ATH",away:"SEV",teams:{ATH:"Athletic Bilbao",SEV:"Sevilla"},time:"Sáb 22 Ago, 12:00",wp:{ATH:59,SEV:16.5,draw:24.5}}
-    ]
-  },
-  {
-    key: "serie_a", name: "Serie A (Itália)",
-    games: [
-      {home:"INT",away:"MON",teams:{INT:"Inter de Milão",MON:"Monza"},time:"Sáb 22 Ago, 13:30",wp:{INT:79.6,MON:6.7,draw:13.7}},
-      {home:"UDI",away:"COM",teams:{UDI:"Udinese",COM:"Como"},time:"Sáb 22 Ago, 13:30",wp:{UDI:21.2,COM:51.8,draw:27}},
-      {home:"GEN",away:"NAP",teams:{GEN:"Genoa",NAP:"Napoli"},time:"Sáb 22 Ago, 15:45",wp:{GEN:20.6,NAP:51.4,draw:28}},
-      {home:"PAR",away:"CAG",teams:{PAR:"Parma",CAG:"Cagliari"},time:"Sáb 22 Ago, 15:45",wp:{PAR:36.5,CAG:33.2,draw:30.3}},
-      {home:"FRO",away:"JUV",teams:{FRO:"Frosinone",JUV:"Juventus"},time:"Dom 23 Ago, 13:30",wp:{FRO:14.3,JUV:64.4,draw:21.3}},
-      {home:"VEN",away:"LEC",teams:{VEN:"Venezia",LEC:"Lecce"},time:"Dom 23 Ago, 13:30",wp:{VEN:40.4,LEC:30.4,draw:29.2}},
-      {home:"ATA",away:"SAS",teams:{ATA:"Atalanta",SAS:"Sassuolo"},time:"Dom 23 Ago, 15:45",wp:{ATA:62.5,SAS:16.3,draw:21.2}},
-      {home:"TOR",away:"ACM",teams:{TOR:"Torino",ACM:"Milan"},time:"Dom 23 Ago, 15:45",wp:{TOR:20.8,ACM:53.7,draw:25.5}},
-      {home:"BFC",away:"LAZ",teams:{BFC:"Bologna",LAZ:"Lazio"},time:"Seg 24 Ago, 13:30",wp:{BFC:43.9,LAZ:26.8,draw:29.3}},
-      {home:"ROM",away:"FIO",teams:{ROM:"Roma",FIO:"Fiorentina"},time:"Seg 24 Ago, 15:45",wp:{ROM:61.7,FIO:15.7,draw:22.6}}
-    ]
-  },
-  {
-    key: "bundesliga", name: "Bundesliga",
-    games: [
-      {home:"BMU",away:"VFB",teams:{BMU:"Bayern de Munique",VFB:"Stuttgart"},time:"Sex 28 Ago, 15:30",wp:{BMU:74.4,VFB:11.6,draw:14}},
-      {home:"RBL",away:"BMG",teams:{RBL:"RB Leipzig",BMG:"Borussia M'gladbach"},time:"Sáb 29 Ago, 10:30",wp:{RBL:62.1,BMG:17.5,draw:20.4}},
-      {home:"M05",away:"PAD",teams:{M05:"Mainz",PAD:"Paderborn"},time:"Sáb 29 Ago, 10:30",wp:{M05:56.1,PAD:20.3,draw:23.6}},
-      {home:"UNI",away:"SGE",teams:{UNI:"Union Berlin",SGE:"Eintracht Frankfurt"},time:"Sáb 29 Ago, 10:30",wp:{UNI:40.1,SGE:33.1,draw:26.8}},
-      {home:"KOE",away:"TSG",teams:{KOE:"FC Köln",TSG:"Hoffenheim"},time:"Sáb 29 Ago, 10:30",wp:{KOE:33,TSG:41,draw:26}},
-      {home:"SVE",away:"LEV",teams:{SVE:"Elversberg",LEV:"Bayer Leverkusen"},time:"Sáb 29 Ago, 10:30",wp:{SVE:17.9,LEV:61.9,draw:20.2}},
-      {home:"BVB",away:"HSV",teams:{BVB:"Borussia Dortmund",HSV:"Hamburgo"},time:"Sáb 29 Ago, 13:30",wp:{BVB:72.3,HSV:11.2,draw:16.5}},
-      {home:"SCF",away:"SVW",teams:{SCF:"Freiburg",SVW:"Werder Bremen"},time:"Dom 30 Ago, 10:30",wp:{SCF:46,SVW:27.1,draw:26.9}},
-      {home:"FCA",away:"SCH",teams:{FCA:"Augsburg",SCH:"Schalke 04"},time:"Dom 30 Ago, 12:30",wp:{FCA:44,SCH:30.6,draw:25.4}},
-      {home:"VFB",away:"KOE",teams:{VFB:"Stuttgart",KOE:"FC Köln"},time:"Sex 4 Set, 15:30",wp:null}
-    ]
-  },
-  {
-    key: "ligue_1", name: "Ligue 1",
-    games: [
-      {home:"OLM",away:"RCS",teams:{OLM:"Marselha",RCS:"Strasbourg"},time:"Sex 21 Ago, 15:45",wp:{OLM:58,RCS:20.3,draw:21.7}},
-      {home:"RCL",away:"AUX",teams:{RCL:"Lens",AUX:"Auxerre"},time:"Sáb 22 Ago, 12:15",wp:{RCL:59.8,AUX:18.2,draw:22}},
-      {home:"MAN",away:"STB",teams:{MAN:"Le Mans",STB:"Brest"},time:"Sáb 22 Ago, 15:45",wp:{MAN:37.7,STB:35.1,draw:27.2}},
-      {home:"NIC",away:"FCL",teams:{NIC:"Nice",FCL:"Lorient"},time:"Sáb 22 Ago, 15:45",wp:{NIC:43.2,FCL:29.8,draw:27}},
-      {home:"TFC",away:"OL",teams:{TFC:"Toulouse",OL:"Lyon"},time:"Sáb 22 Ago, 15:45",wp:{TFC:27.8,OL:46,draw:26.2}},
-      {home:"EST",away:"PAR",teams:{EST:"Troyes",PAR:"Paris FC"},time:"Sáb 22 Ago, 15:45",wp:{EST:34.5,PAR:38.2,draw:27.3}},
-      {home:"ANG",away:"LIL",teams:{ANG:"Angers",LIL:"Lille"},time:"Dom 23 Ago, 10:00",wp:{ANG:18.7,LIL:56.5,draw:24.8}},
-      {home:"HAC",away:"ASM",teams:{HAC:"Le Havre",ASM:"Mônaco"},time:"Dom 23 Ago, 12:15",wp:{HAC:27.8,ASM:46.9,draw:25.3}},
-      {home:"PSG",away:"REN",teams:{PSG:"Paris Saint-Germain",REN:"Rennes"},time:"Dom 23 Ago, 15:45",wp:{PSG:68.2,REN:14.4,draw:17.4}},
-      {home:"LIL",away:"PSG",teams:{LIL:"Lille",PSG:"Paris Saint-Germain"},time:"Sex 28 Ago, 15:45",wp:null}
-    ]
-  },
-  {
-    key: "mls", name: "MLS (EUA/Canadá)",
-    games: [
-      {home:"NE",away:"HOU",teams:{NE:"New England Revolution",HOU:"Houston Dynamo"},time:"Sáb 08 Ago, 17:30",wp:{NE:39,HOU:33.9,draw:27.1}},
-      {home:"ATL",away:"RBNY",teams:{ATL:"Atlanta United FC",RBNY:"New York Red Bulls"},time:"Sáb 15 Ago, 20:30",wp:{ATL:51.8,RBNY:25.1,draw:23.1}},
-      {home:"CLT",away:"CLB",teams:{CLT:"Charlotte FC",CLB:"Columbus Crew"},time:"Sáb 15 Ago, 20:30",wp:{CLT:45.2,CLB:29.8,draw:25}},
-      {home:"MTL",away:"DC",teams:{MTL:"CF Montreal",DC:"DC United"},time:"Sáb 15 Ago, 20:30",wp:{MTL:43.3,DC:30.6,draw:26.1}},
-      {home:"ORL",away:"CIN",teams:{ORL:"Orlando City SC",CIN:"FC Cincinnati"},time:"Sáb 15 Ago, 20:30",wp:{ORL:41.8,CIN:36.5,draw:21.7}},
-      {home:"TOR",away:"NE",teams:{TOR:"Toronto FC",NE:"New England Revolution"},time:"Sáb 15 Ago, 20:30",wp:{TOR:40.7,NE:33.6,draw:25.7}},
-      {home:"HOU",away:"LA",teams:{HOU:"Houston Dynamo",LA:"Los Angeles Galaxy"},time:"Sáb 15 Ago, 21:30",wp:{HOU:56.8,LA:19.9,draw:23.3}},
-      {home:"NSH",away:"MIA",teams:{NSH:"Nashville SC",MIA:"Inter Miami CF"},time:"Sáb 15 Ago, 21:30",wp:{NSH:43.5,MIA:32.7,draw:23.8}},
-      {home:"COL",away:"SKC",teams:{COL:"Colorado Rapids",SKC:"Sporting Kansas City"},time:"Sáb 15 Ago, 22:30",wp:{COL:69.4,SKC:13.1,draw:17.5}},
-      {home:"RSL",away:"MIN",teams:{RSL:"Real Salt Lake",MIN:"Minnesota United FC"},time:"Sáb 15 Ago, 22:30",wp:{RSL:55.7,MIN:21.3,draw:23}}
-    ]
-  }
-];
-
-// Resultados reais do último fim de semana da MLS (fonte: Sportradar, 01-02/08/2026)
-const MLS_RESULTS = [
-  {home:"Vancouver Whitecaps", away:"Los Angeles FC", score:"1 x 1"},
-  {home:"Inter Miami", away:"Columbus Crew", score:"2 x 2"},
-  {home:"Chicago Fire", away:"Charlotte FC", score:"2 x 1"},
-  {home:"Sporting KC", away:"Houston Dynamo", score:"0 x 2"},
-  {home:"Minnesota United", away:"San Diego FC", score:"1 x 1"},
-  {home:"Saint Louis City", away:"Real Salt Lake", score:"1 x 1"},
-  {home:"Colorado Rapids", away:"Austin FC", score:"1 x 0"},
-  {home:"FC Cincinnati", away:"San Jose Earthquakes", score:"4 x 2"},
-  {home:"LA Galaxy", away:"FC Dallas", score:"0 x 0"},
-  {home:"Portland Timbers", away:"Seattle Sounders", score:"2 x 1"}
-];
-
-// ---------- BRASILEIRÃO (heuristic from current table, até a 22ª rodada) ----------
-const BR_TEAM_STATS = {
-  PAL:{name:"Palmeiras", j:22, gp:38, gc:16, pct:73},
-  FLA:{name:"Flamengo", j:21, gp:39, gc:18, pct:67},
-  CAP:{name:"Athletico-PR", j:22, gp:30, gc:19, pct:61},
-  FLU:{name:"Fluminense", j:22, gp:31, gc:26, pct:53},
-  CRU:{name:"Cruzeiro", j:22, gp:30, gc:31, pct:50},
-  BAH:{name:"Bahia", j:22, gp:29, gc:25, pct:50},
-  COR:{name:"Corinthians", j:22, gp:24, gc:20, pct:48},
-  RBB:{name:"Red Bull Bragantino", j:21, gp:26, gc:22, pct:49},
-  BOT:{name:"Botafogo", j:21, gp:35, gc:33, pct:48},
-  CBA:{name:"Coritiba", j:22, gp:27, gc:29, pct:45},
-  ATL:{name:"Atlético-MG", j:21, gp:27, gc:27, pct:46},
-  SAO:{name:"São Paulo", j:21, gp:26, gc:25, pct:41},
-  VIT:{name:"Vitória", j:22, gp:22, gc:33, pct:39},
-  GRE:{name:"Grêmio", j:21, gp:24, gc:27, pct:40},
-  MIR:{name:"Mirassol", j:21, gp:24, gc:30, pct:37},
-  INT:{name:"Internacional", j:22, gp:23, gc:27, pct:35},
-  SAN:{name:"Santos", j:21, gp:29, gc:35, pct:35},
-  VAS:{name:"Vasco da Gama", j:21, gp:23, gc:31, pct:35},
-  REM:{name:"Remo", j:22, gp:26, gc:36, pct:33},
-  CHA:{name:"Chapecoense", j:21, gp:20, gc:43, pct:16}
-};
-const BR_GAMES = [
-  {home:"CAP", away:"RBB", time:"Sáb 15 Ago, 18:30"},
-  {home:"SAO", away:"CBA", time:"Sáb 15 Ago, 21:00"},
-  {home:"CHA", away:"BAH", time:"Dom 16 Ago, 11:00"},
-  {home:"ATL", away:"GRE", time:"Dom 16 Ago, 16:00"},
-  {home:"VAS", away:"SAN", time:"Dom 16 Ago, 16:00"},
-  {home:"FLU", away:"PAL", time:"Dom 16 Ago, 16:30"},
-  {home:"MIR", away:"FLA", time:"Dom 16 Ago, 18:30"},
-  {home:"VIT", away:"BOT", time:"Dom 16 Ago, 18:30"},
-  {home:"COR", away:"CRU", time:"Dom 16 Ago, 19:30"},
-  {home:"INT", away:"REM", time:"Seg 17 Ago, 20:00"}
-];
-
-// Resultados reais da 22ª rodada (fonte: Lance!/SuperVasco, 08-09/08/2026)
-const BR_RESULTS = [
-  {home:"Grêmio", away:"São Paulo", score:"2 x 1"},
-  {home:"Remo", away:"Atlético-MG", score:"2 x 2"},
-  {home:"Coritiba", away:"Chapecoense", score:"2 x 1"},
-  {home:"Botafogo", away:"Fluminense", score:"1 x 1"},
-  {home:"Cruzeiro", away:"Mirassol", score:"3 x 1"},
-  {home:"Bahia", away:"Vasco", score:"0 x 0"},
-  {home:"Palmeiras", away:"Internacional", score:"0 x 0"},
-  {home:"Bragantino", away:"Corinthians", score:"0 x 2"},
-  {home:"Santos", away:"Athletico-PR", score:"0 x 2"},
-  {home:"Flamengo", away:"Vitória", score:"2 x 0"}
-];
-
-// Corner averages per game (overall, season to date) — real data via APWin (apwin.com/league/brazil/serie-a/corners)
-const BR_CORNER_STATS = {
-  PAL:{cf:5.86, ca:6.00}, FLA:{cf:4.40, ca:4.60}, CAP:{cf:4.81, ca:4.81}, FLU:{cf:5.71, ca:4.14},
-  BAH:{cf:5.76, ca:5.48}, RBB:{cf:5.60, ca:5.25}, CRU:{cf:5.43, ca:3.90}, BOT:{cf:3.90, ca:5.35},
-  COR:{cf:4.57, ca:4.67}, ATL:{cf:4.95, ca:5.20}, CBA:{cf:3.38, ca:6.24}, SAO:{cf:6.40, ca:4.50},
-  VIT:{cf:4.19, ca:4.81}, MIR:{cf:5.65, ca:4.85}, SAN:{cf:5.40, ca:4.85}, INT:{cf:6.76, ca:4.00},
-  GRE:{cf:4.15, ca:4.55}, VAS:{cf:5.35, ca:3.90}, REM:{cf:4.33, ca:6.52}, CHA:{cf:3.65, ca:6.65}
-};
-// % of matches with more than 3.5 total cards (both teams combined), season to date — real data via APWin
-const BR_CARD_STATS = {
-  CAP:86, COR:86, INT:86, VIT:81, GRE:85, SAN:80, CRU:76, FLU:76, PAL:76, CBA:76,
-  RBB:80, FLA:75, MIR:75, BOT:70, BAH:67, REM:62, CHA:60, SAO:55, ATL:45, VAS:45
-};
-
-// Tabela completa (fonte: Lance!, até a 22ª rodada)
-const BR_STANDINGS = [
-  {pos:1, abbr:"PAL", pts:48, j:22, v:14, e:6, d:2, gp:38, gc:16},
-  {pos:2, abbr:"FLA", pts:42, j:21, v:12, e:6, d:3, gp:39, gc:18},
-  {pos:3, abbr:"CAP", pts:40, j:22, v:12, e:4, d:6, gp:30, gc:19},
-  {pos:4, abbr:"FLU", pts:35, j:22, v:9, e:8, d:5, gp:31, gc:26},
-  {pos:5, abbr:"CRU", pts:33, j:22, v:9, e:6, d:7, gp:30, gc:31},
-  {pos:6, abbr:"BAH", pts:33, j:22, v:8, e:9, d:5, gp:29, gc:25},
-  {pos:7, abbr:"COR", pts:32, j:22, v:8, e:8, d:6, gp:24, gc:20},
-  {pos:8, abbr:"RBB", pts:31, j:21, v:9, e:4, d:8, gp:26, gc:22},
-  {pos:9, abbr:"BOT", pts:30, j:21, v:8, e:6, d:7, gp:35, gc:33},
-  {pos:10, abbr:"CBA", pts:30, j:22, v:8, e:6, d:8, gp:27, gc:29},
-  {pos:11, abbr:"ATL", pts:29, j:21, v:8, e:5, d:8, gp:27, gc:27},
-  {pos:12, abbr:"SAO", pts:26, j:21, v:7, e:5, d:9, gp:26, gc:25},
-  {pos:13, abbr:"VIT", pts:26, j:22, v:7, e:5, d:10, gp:22, gc:33},
-  {pos:14, abbr:"GRE", pts:25, j:21, v:6, e:7, d:8, gp:24, gc:27},
-  {pos:15, abbr:"MIR", pts:23, j:21, v:6, e:5, d:10, gp:24, gc:30},
-  {pos:16, abbr:"INT", pts:23, j:22, v:5, e:8, d:9, gp:23, gc:27},
-  {pos:17, abbr:"SAN", pts:22, j:21, v:5, e:7, d:9, gp:29, gc:35},
-  {pos:18, abbr:"VAS", pts:22, j:21, v:5, e:7, d:9, gp:23, gc:31},
-  {pos:19, abbr:"REM", pts:22, j:22, v:5, e:7, d:10, gp:26, gc:36},
-  {pos:20, abbr:"CHA", pts:10, j:21, v:1, e:7, d:13, gp:20, gc:43}
-];
-
-// Tabela completa (fonte: Sportradar, temporada 2026 até 01/08)
-const MLS_STANDINGS = [
-  {pos:1, name:"Nashville SC", pts:40, v:12, e:4, d:2},
-  {pos:2, name:"Inter Miami CF", pts:38, v:11, e:5, d:2},
-  {pos:3, name:"Vancouver Whitecaps FC", pts:34, v:10, e:4, d:3},
-  {pos:4, name:"Los Angeles FC", pts:34, v:10, e:4, d:5},
-  {pos:5, name:"San Jose Earthquakes", pts:33, v:10, e:3, d:5},
-  {pos:6, name:"New England Revolution", pts:30, v:9, e:3, d:5},
-  {pos:7, name:"Chicago Fire", pts:29, v:9, e:2, d:6},
-  {pos:8, name:"Houston Dynamo", pts:29, v:9, e:2, d:6},
-  {pos:9, name:"Real Salt Lake", pts:27, v:8, e:3, d:6},
-  {pos:10, name:"FC Dallas", pts:27, v:7, e:6, d:5},
-  {pos:11, name:"New York City FC", pts:26, v:7, e:5, d:6},
-  {pos:12, name:"FC Cincinnati", pts:26, v:7, e:5, d:6},
-  {pos:13, name:"Saint Louis City SC", pts:26, v:7, e:5, d:6},
-  {pos:14, name:"Charlotte FC", pts:25, v:7, e:4, d:7},
-  {pos:15, name:"New York Red Bulls", pts:25, v:7, e:4, d:7},
-  {pos:16, name:"Portland Timbers", pts:24, v:7, e:3, d:8},
-  {pos:17, name:"Seattle Sounders", pts:24, v:7, e:3, d:7},
-  {pos:18, name:"Minnesota United FC", pts:24, v:6, e:6, d:6},
-  {pos:19, name:"DC United", pts:23, v:5, e:8, d:5},
-  {pos:20, name:"Colorado Rapids", pts:22, v:7, e:1, d:10},
-  {pos:21, name:"Los Angeles Galaxy", pts:22, v:5, e:7, d:7},
-  {pos:22, name:"San Diego FC", pts:21, v:5, e:6, d:7},
-  {pos:23, name:"Orlando City SC", pts:20, v:6, e:2, d:10},
-  {pos:24, name:"Columbus Crew", pts:20, v:5, e:5, d:8},
-  {pos:25, name:"Austin FC", pts:17, v:4, e:5, d:9},
-  {pos:26, name:"Toronto FC", pts:17, v:3, e:8, d:7},
-  {pos:27, name:"Philadelphia Union", pts:16, v:4, e:4, d:10},
-  {pos:28, name:"CF Montreal", pts:16, v:4, e:4, d:10},
-  {pos:29, name:"Sporting Kansas City", pts:14, v:4, e:2, d:12},
-  {pos:30, name:"Atlanta United FC", pts:12, v:3, e:3, d:12}
-];
-
-const TABS = [
-  {key:'resumo', label:'Resumo'},
-  {key:'brasileirao', label:'Brasileirão'},
-  {key:'epl', label:'Premier League'},
-  {key:'la_liga', label:'La Liga'},
-  {key:'serie_a', label:'Serie A'},
-  {key:'bundesliga', label:'Bundesliga'},
-  {key:'ligue_1', label:'Ligue 1'},
-  {key:'mls', label:'MLS'}
-];
+// Injetado pelo scripts/build.js: { leagues: { epl: { name, games: [...] }, ... }, generatedAt }
+const DATA = {"leagues":{"brasileirao":{"name":"Brasileirão","games":[{"home":"Fluminense","away":"Palmeiras","time":"15/08/2026 - 15:30","pick":{"side":"away","label":"Palmeiras","gap":-12,"tier":"media","homePct":53,"awayPct":73},"goals":{"total":2.522727272727273,"market":"Linha de 2.5 gols equilibrada","tier":"baixa","hAtk":1.4090909090909092,"hDef":1.1818181818181819,"aAtk":1.7272727272727273,"aDef":0.7272727272727273},"cornersTip":{"total":10.84,"market":"Mais de 9.5 escanteios","tier":"media","hCf":5.77,"hCa":4.27,"aCf":5.82,"aCa":5.82},"cardsTip":{"avg":77,"market":"Mais de 3.5 cartões","tier":"media","hPct":77,"aPct":77}},{"home":"Athletico-PR","away":"Bragantino","time":"15/08/2026 - 17:30","pick":{"side":"home","label":"Athletico-PR","gap":20,"tier":"media","homePct":61,"awayPct":49},"goals":{"total":2.2564935064935066,"market":"Linha de 2.5 gols equilibrada","tier":"baixa","hAtk":1.3636363636363635,"hDef":0.8636363636363636,"aAtk":1.2380952380952381,"aDef":1.0476190476190477},"cornersTip":{"total":10.155000000000001,"market":"Linha de 9.5 escanteios equilibrada","tier":"baixa","hCf":4.68,"hCa":5.05,"aCf":5.48,"aCa":5.1},"cardsTip":{"avg":81.5,"market":"Mais de 3.5 cartões","tier":"media","hPct":82,"aPct":81}},{"home":"São Paulo","away":"Coritiba","time":"15/08/2026 - 20:00","pick":{"side":"equilibrado","label":"São Paulo","gap":4,"tier":"baixa","homePct":41,"awayPct":45},"goals":{"total":2.487012987012987,"market":"Linha de 2.5 gols equilibrada","tier":"baixa","hAtk":1.2380952380952381,"hDef":1.1904761904761905,"aAtk":1.2272727272727273,"aDef":1.3181818181818181},"cornersTip":{"total":10.365,"market":"Mais de 9.5 escanteios","tier":"media","hCf":6.43,"hCa":4.62,"aCf":3.45,"aCa":6.23},"cardsTip":{"avg":65,"market":"Linha de 3.5 cartões equilibrada","tier":"baixa","hPct":57,"aPct":73}},{"home":"Chapecoense","away":"Bahia","time":"16/08/2026 - 10:00","pick":{"side":"away","label":"Bahia","gap":-26,"tier":"alta","homePct":16,"awayPct":50},"goals":{"total":2.7272727272727275,"market":"Mais de 2.5 gols","tier":"media","hAtk":0.9523809523809523,"hDef":2.0476190476190474,"aAtk":1.3181818181818181,"aDef":1.1363636363636365},"cornersTip":{"total":10.754999999999999,"market":"Mais de 9.5 escanteios","tier":"media","hCf":3.76,"hCa":6.57,"aCf":5.68,"aCa":5.5},"cardsTip":{"avg":60.5,"market":"Linha de 3.5 cartões equilibrada","tier":"baixa","hPct":57,"aPct":64}},{"home":"Vasco","away":"Santos","time":"16/08/2026 - 15:00","pick":{"side":"equilibrado","label":"Vasco","gap":8,"tier":"baixa","homePct":35,"awayPct":35},"goals":{"total":2.8095238095238093,"market":"Mais de 2.5 gols","tier":"media","hAtk":1.0952380952380953,"hDef":1.4761904761904763,"aAtk":1.380952380952381,"aDef":1.6666666666666667},"cornersTip":{"total":9.805,"market":"Linha de 9.5 escanteios equilibrada","tier":"baixa","hCf":5.38,"hCa":3.9,"aCf":5.62,"aCa":4.71},"cardsTip":{"avg":59.5,"market":"Linha de 3.5 cartões equilibrada","tier":"baixa","hPct":43,"aPct":76}},{"home":"Atlético-MG","away":"Grêmio","time":"16/08/2026 - 15:00","pick":{"side":"home","label":"Atlético-MG","gap":14,"tier":"media","homePct":46,"awayPct":40},"goals":{"total":2.5,"market":"Linha de 2.5 gols equilibrada","tier":"baixa","hAtk":1.2857142857142858,"hDef":1.2857142857142858,"aAtk":1.1428571428571428,"aDef":1.2857142857142858},"cornersTip":{"total":9.48,"market":"Linha de 9.5 escanteios equilibrada","tier":"baixa","hCf":4.81,"hCa":5.19,"aCf":4.29,"aCa":4.67},"cardsTip":{"avg":67,"market":"Linha de 3.5 cartões equilibrada","tier":"baixa","hPct":48,"aPct":86}},{"home":"Vitória","away":"Botafogo","time":"16/08/2026 - 17:30","pick":{"side":"equilibrado","label":"Botafogo","gap":-1,"tier":"baixa","homePct":39,"awayPct":48},"goals":{"total":2.869047619047619,"market":"Mais de 2.5 gols","tier":"media","hAtk":1,"hDef":1.5,"aAtk":1.6666666666666667,"aDef":1.5714285714285714},"cornersTip":{"total":9.24,"market":"Menos de 9.5 escanteios","tier":"media","hCf":4.05,"hCa":4.95,"aCf":4.05,"aCa":5.43},"cardsTip":{"avg":74,"market":"Mais de 3.5 cartões","tier":"media","hPct":77,"aPct":71}},{"home":"Mirassol","away":"Flamengo","time":"16/08/2026 - 17:30","pick":{"side":"away","label":"Flamengo","gap":-22,"tier":"media","homePct":37,"awayPct":67},"goals":{"total":2.642857142857143,"market":"Mais de 2.5 gols","tier":"media","hAtk":1.1428571428571428,"hDef":1.4285714285714286,"aAtk":1.8571428571428572,"aDef":0.8571428571428571},"cornersTip":{"total":9.62,"market":"Linha de 9.5 escanteios equilibrada","tier":"baixa","hCf":5.43,"hCa":4.81,"aCf":4.57,"aCa":4.43},"cardsTip":{"avg":73.5,"market":"Mais de 3.5 cartões","tier":"media","hPct":76,"aPct":71}},{"home":"Corinthians","away":"Cruzeiro","time":"16/08/2026 - 18:30","pick":{"side":"equilibrado","label":"Corinthians","gap":6,"tier":"baixa","homePct":48,"awayPct":50},"goals":{"total":2.3863636363636362,"market":"Linha de 2.5 gols equilibrada","tier":"baixa","hAtk":1.0909090909090908,"hDef":0.9090909090909091,"aAtk":1.3636363636363635,"aDef":1.4090909090909092},"cornersTip":{"total":9.085,"market":"Menos de 9.5 escanteios","tier":"media","hCf":4.45,"hCa":4.59,"aCf":5.36,"aCa":3.77},"cardsTip":{"avg":81.5,"market":"Mais de 3.5 cartões","tier":"media","hPct":86,"aPct":77}},{"home":"Internacional","away":"Remo","time":"17/08/2026 - 19:00","pick":{"side":"home","label":"Internacional","gap":10,"tier":"media","homePct":35,"awayPct":33},"goals":{"total":2.5454545454545454,"market":"Linha de 2.5 gols equilibrada","tier":"baixa","hAtk":1.0454545454545454,"hDef":1.2272727272727273,"aAtk":1.1818181818181819,"aDef":1.6363636363636365},"cornersTip":{"total":10.64,"market":"Mais de 9.5 escanteios","tier":"media","hCf":6.55,"hCa":4.05,"aCf":4.36,"aCa":6.32},"cardsTip":{"avg":75,"market":"Mais de 3.5 cartões","tier":"media","hPct":86,"aPct":64}}]},"epl":{"name":"Premier League","games":[{"home":"Arsenal","away":"Coventry City","time":"21/08/2026 - 15:00","noData":true},{"home":"Hull City","away":"Manchester United","time":"22/08/2026 - 07:30","noData":true},{"home":"Everton","away":"Crystal Palace","time":"22/08/2026 - 10:00","noData":true},{"home":"Nottingham Forest","away":"Leeds","time":"22/08/2026 - 10:00","noData":true},{"home":"Ipswich Town","away":"Sunderland","time":"22/08/2026 - 10:00","noData":true},{"home":"Brentford","away":"Tottenham","time":"22/08/2026 - 12:30","noData":true},{"home":"Manchester City","away":"Bournemouth","time":"23/08/2026 - 09:00","noData":true},{"home":"Brighton","away":"Aston Villa","time":"23/08/2026 - 09:00","noData":true},{"home":"Newcastle United","away":"Liverpool","time":"23/08/2026 - 11:30","noData":true},{"home":"Fulham","away":"Chelsea","time":"24/08/2026 - 15:00","noData":true}]},"la_liga":{"name":"La Liga","games":[{"home":"Deportivo Alavés","away":"Getafe","time":"15/08/2026 - 13:30","noData":true},{"home":"Sevilla","away":"Rayo Vallecano","time":"15/08/2026 - 15:30","noData":true},{"home":"Racing Santander","away":"Villarreal","time":"16/08/2026 - 11:00","noData":true},{"home":"Espanyol","away":"Levante","time":"16/08/2026 - 13:00","noData":true},{"home":"Celta de Vigo","away":"Osasuna","time":"16/08/2026 - 15:30","noData":true},{"home":"Deportivo La Coruña","away":"Elche CF","time":"17/08/2026 - 15:00","noData":true},{"home":"Atlético Madrid","away":"Málaga","time":"19/08/2026 - 15:00","noData":true},{"home":"Rayo Vallecano","away":"Deportivo Alavés","time":"20/08/2026 - 15:00","noData":true},{"home":"Betis","away":"Real Sociedad","time":"21/08/2026 - 15:00","noData":true},{"home":"Athletic","away":"Sevilla","time":"22/08/2026 - 11:00","noData":true}]},"serie_a":{"name":"Serie A (Itália)","games":[{"home":"Udinese","away":"Como","time":"22/08/2026 - 12:30","noData":true},{"home":"Inter Milan","away":"Monza","time":"22/08/2026 - 12:30","noData":true},{"home":"Parma","away":"Cagliari","time":"22/08/2026 - 14:45","noData":true},{"home":"Genoa","away":"Napoli","time":"22/08/2026 - 14:45","noData":true},{"home":"Frosinone","away":"Juventus","time":"23/08/2026 - 12:30","noData":true},{"home":"Venezia","away":"Lecce","time":"23/08/2026 - 12:30","noData":true},{"home":"Torino","away":"Milan","time":"23/08/2026 - 14:45","noData":true},{"home":"Atalanta","away":"Sassuolo","time":"23/08/2026 - 14:45","noData":true},{"home":"Bologna","away":"Lazio","time":"24/08/2026 - 12:30","noData":true},{"home":"Roma","away":"Fiorentina","time":"24/08/2026 - 14:45","noData":true}]},"bundesliga":{"name":"Bundesliga","games":[{"home":"Bayern München","away":"Stuttgart","time":"28/08/2026 - 14:30","noData":true},{"home":"Köln","away":"Hoffenheim","time":"29/08/2026 - 09:30","noData":true},{"home":"Union Berlin","away":"Eintracht Frankfurt","time":"29/08/2026 - 09:30","noData":true},{"home":"RB Leipzig","away":"Borussia M'gladbach","time":"29/08/2026 - 09:30","noData":true},{"home":"Elversberg","away":"Bayer Leverkusen","time":"29/08/2026 - 09:30","noData":true},{"home":"Mainz 05","away":"Paderborn","time":"29/08/2026 - 09:30","noData":true},{"home":"Borussia Dortmund","away":"Hamburger SV","time":"29/08/2026 - 12:30","noData":true},{"home":"Freiburg","away":"Werder Bremen","time":"30/08/2026 - 09:30","noData":true},{"home":"Augsburg","away":"Schalke 04","time":"30/08/2026 - 11:30","noData":true},{"home":"Stuttgart","away":"Köln","time":"04/09/2026 - 14:30","noData":true}]},"ligue_1":{"name":"Ligue 1","games":[{"home":"Olympique de Marseille","away":"Strasbourg","time":"21/08/2026 - 14:45","noData":true},{"home":"Lens","away":"Auxerre","time":"22/08/2026 - 11:15","noData":true},{"home":"Troyes","away":"Paris","time":"22/08/2026 - 14:45","noData":true},{"home":"Nice","away":"Lorient","time":"22/08/2026 - 14:45","noData":true},{"home":"Le Mans","away":"Brest","time":"22/08/2026 - 14:45","noData":true},{"home":"Toulouse","away":"Lyon","time":"22/08/2026 - 14:45","noData":true},{"home":"Angers","away":"Lille","time":"23/08/2026 - 09:00","noData":true},{"home":"Le Havre","away":"Monaco","time":"23/08/2026 - 11:15","noData":true},{"home":"PSG","away":"Rennes","time":"23/08/2026 - 14:45","noData":true},{"home":"Lille","away":"PSG","time":"28/08/2026 - 14:45","noData":true}]}},"generatedAt":"12/08/2026, 08:46:45"};
 
 function tierLabel(t){
   return t === 'alta' ? 'Alta confiança' : t === 'media' ? 'Confiança média' : 'Jogo equilibrado';
-}
-
-// ----- EU pick logic (real model) -----
-function euPickInfo(game){
-  if(!game.wp) return null;
-  const homeP = game.wp[game.home];
-  const awayP = game.wp[game.away];
-  const drawP = game.wp.draw;
-  const max = Math.max(homeP, awayP, drawP);
-  let label;
-  if(max === homeP) label = game.teams[game.home];
-  else if(max === awayP) label = game.teams[game.away];
-  else label = 'Empate';
-  let tier = max >= 60 ? 'alta' : max >= 40 ? 'media' : 'baixa';
-  return { label, pct: max, tier, homeP, awayP, drawP };
-}
-
-function euTips(game, reason){
-  reason = reason || 'Sem dados — temporada ainda não começou.';
-  const p = euPickInfo(game);
-  const rows = [];
-  if(p){
-    rows.push({market:'Resultado', html:'Maior probabilidade: <b>'+p.label+'</b> ('+p.pct.toFixed(1)+'%)', reason:'Modelo preditivo (Sportradar).'});
-  } else {
-    rows.push({market:'Resultado', unavailable:true, html:'Probabilidade ainda não divulgada.'});
-  }
-  rows.push({market:'Gols', unavailable:true, html:reason});
-  rows.push({market:'Escanteios', unavailable:true, html:reason});
-  rows.push({market:'Cartões', unavailable:true, html:reason});
-  return { rows, tier: p ? p.tier : null, pickLabel: p ? p.label : null, pct: p ? p.pct : null };
-}
-
-// ----- BR pick logic (heuristic) -----
-function brPickInfo(home, away){
-  const h = BR_TEAM_STATS[home], a = BR_TEAM_STATS[away];
-  const HOME_ADV = 8;
-  const gap = (h.pct + HOME_ADV) - a.pct;
-  let side, label, tier;
-  if(gap >= 25){ side='home'; label=h.name; tier='alta'; }
-  else if(gap <= -25){ side='away'; label=a.name; tier='alta'; }
-  else if(gap >= 10){ side='home'; label=h.name; tier='media'; }
-  else if(gap <= -10){ side='away'; label=a.name; tier='media'; }
-  else { side='equilibrado'; label = gap >= 0 ? h.name : a.name; tier='baixa'; }
-  return { side, label, gap, tier, homePct:h.pct, awayPct:a.pct };
-}
-
-function brGoalsInfo(home, away){
-  const h = BR_TEAM_STATS[home], a = BR_TEAM_STATS[away];
-  const hAtk = h.gp / h.j, hDef = h.gc / h.j;
-  const aAtk = a.gp / a.j, aDef = a.gc / a.j;
-  const expHome = (hAtk + aDef) / 2;
-  const expAway = (aAtk + hDef) / 2;
-  const total = expHome + expAway;
-  let market, tier;
-  if(total >= 2.6){ market = 'Mais de 2.5 gols'; tier='media'; }
-  else if(total <= 2.25){ market = 'Menos de 2.5 gols'; tier='media'; }
-  else { market = 'Linha de 2.5 gols equilibrada'; tier='baixa'; }
-  return { total, market, tier, hAtk, hDef, aAtk, aDef };
-}
-
-function brCornersInfo(home, away){
-  const h = BR_CORNER_STATS[home], a = BR_CORNER_STATS[away];
-  const expHome = (h.cf + a.ca) / 2;
-  const expAway = (a.cf + h.ca) / 2;
-  const total = expHome + expAway;
-  let market, tier;
-  if(total >= 10.3){ market = 'Mais de 9.5 escanteios'; tier='media'; }
-  else if(total <= 9.3){ market = 'Menos de 9.5 escanteios'; tier='media'; }
-  else { market = 'Linha de 9.5 escanteios equilibrada'; tier='baixa'; }
-  return { total, market, tier, hCf:h.cf, hCa:h.ca, aCf:a.cf, aCa:a.ca };
-}
-
-function brCardsInfo(home, away){
-  const hPct = BR_CARD_STATS[home], aPct = BR_CARD_STATS[away];
-  const avg = (hPct + aPct) / 2;
-  let market, tier;
-  if(avg >= 72){ market = 'Mais de 3.5 cartões'; tier='media'; }
-  else if(avg <= 55){ market = 'Menos de 3.5 cartões'; tier='media'; }
-  else { market = 'Linha de 3.5 cartões equilibrada'; tier='baixa'; }
-  return { avg, market, tier, hPct, aPct };
-}
-
-function brTips(game){
-  const h = BR_TEAM_STATS[game.home], a = BR_TEAM_STATS[game.away];
-  const pick = brPickInfo(game.home, game.away);
-  const goals = brGoalsInfo(game.home, game.away);
-  const rows = [];
-  if(pick.side === 'equilibrado'){
-    rows.push({market:'Resultado', html:'Jogo equilibrado — <b>'+h.name+'</b> ('+h.pct+'%, casa) x <b>'+a.name+'</b> ('+a.pct+'%).', reason:'Diferença de aproveitamento pequena mesmo com o fator casa.'});
-  } else {
-    rows.push({market:'Resultado', html:'Favorito: <b>'+pick.label+'</b>.', reason: h.name+' '+h.pct+'% x '+a.name+' '+a.pct+'% (mandante com bônus de campo).'});
-  }
-  rows.push({market:'Gols', html:'<b>'+goals.market+'</b> (~'+goals.total.toFixed(2)+' gols).', reason: h.name+' marca '+goals.hAtk.toFixed(2)+'/sofre '+goals.hDef.toFixed(2)+' · '+a.name+' marca '+goals.aAtk.toFixed(2)+'/sofre '+goals.aDef.toFixed(2)+' por jogo.'});
-  const corners = brCornersInfo(game.home, game.away);
-  rows.push({market:'Escanteios', html:'<b>'+corners.market+'</b> (~'+corners.total.toFixed(1)+').', reason: h.name+' '+corners.hCf.toFixed(1)+'a favor/'+corners.hCa.toFixed(1)+'contra · '+a.name+' '+corners.aCf.toFixed(1)+'a favor/'+corners.aCa.toFixed(1)+'contra (APWin).'});
-  const cards = brCardsInfo(game.home, game.away);
-  rows.push({market:'Cartões', html:'<b>'+cards.market+'</b> (média '+cards.avg.toFixed(0)+'%).', reason: h.name+' '+cards.hPct+'% · '+a.name+' '+cards.aPct+'% dos jogos com +3.5 cartões (APWin).'});
-  return { rows, tier: pick.tier, pickLabel: pick.side === 'equilibrado' ? null : pick.label };
 }
 
 function tipRowHtml(row){
@@ -797,130 +360,80 @@ function tipRowHtml(row){
   return '<div class="'+cls+'"><div class="tip-market">'+row.market+'</div><div class="tip-body">'+row.html+reason+'</div></div>';
 }
 
-const EU_REASON = 'Sem dados — temporada 2026/27 ainda não começou nesta liga.';
-const MLS_REASON = 'A MLS está em temporada, mas essa fonte não traz média de gols/escanteios/cartões por time.';
-
-function euMatchCardHtml(g, reason){
-  const t = euTips(g, reason);
-  const p = euPickInfo(g);
-  let barHtml = '';
-  if(p){
-    barHtml = '<div class="prob-bar">'
-      + '<div class="prob-seg home" style="flex:'+p.homeP+'">'+(p.homeP>=12?p.homeP.toFixed(0)+'%':'')+'</div>'
-      + '<div class="prob-seg draw" style="flex:'+p.drawP+'">'+(p.drawP>=12?p.drawP.toFixed(0)+'%':'')+'</div>'
-      + '<div class="prob-seg away" style="flex:'+p.awayP+'">'+(p.awayP>=12?p.awayP.toFixed(0)+'%':'')+'</div>'
+function matchCardHtml(g){
+  if(g.noData){
+    return '<div class="match-card">'
+      + '<div class="match-top"><div class="teams">'+g.home+'<span class="vs">vs</span>'+g.away+'</div>'
+      + '<div class="datetime">'+g.time+'</div></div>'
+      + '<div class="tips"><div class="tip-row unavailable"><div class="tip-market">Sem dados</div><div class="tip-body">Temporada ainda não começou para este time — sem jogos disputados na APWin.</div></div></div>'
       + '</div>';
   }
+  const rows = [];
+  if(g.pick.side === 'equilibrado'){
+    rows.push({market:'Resultado', html:'Jogo equilibrado — <b>'+g.home+'</b> ('+g.pick.homePct+'%, casa) x <b>'+g.away+'</b> ('+g.pick.awayPct+'%).', reason:'Diferença de aproveitamento pequena mesmo com o fator casa.'});
+  } else {
+    rows.push({market:'Resultado', html:'Favorito: <b>'+g.pick.label+'</b>.', reason: g.home+' '+g.pick.homePct+'% x '+g.away+' '+g.pick.awayPct+'% (mandante com bônus de campo).'});
+  }
+  rows.push({market:'Gols', html:'<b>'+g.goals.market+'</b> (~'+g.goals.total.toFixed(2)+' gols).', reason: g.home+' marca '+g.goals.hAtk.toFixed(2)+'/sofre '+g.goals.hDef.toFixed(2)+' · '+g.away+' marca '+g.goals.aAtk.toFixed(2)+'/sofre '+g.goals.aDef.toFixed(2)+' por jogo.'});
+  rows.push({market:'Escanteios', html:'<b>'+g.cornersTip.market+'</b> (~'+g.cornersTip.total.toFixed(1)+').', reason: g.home+' '+g.cornersTip.hCf.toFixed(1)+' a favor/'+g.cornersTip.hCa.toFixed(1)+' contra · '+g.away+' '+g.cornersTip.aCf.toFixed(1)+' a favor/'+g.cornersTip.aCa.toFixed(1)+' contra.'});
+  rows.push({market:'Cartões', html:'<b>'+g.cardsTip.market+'</b> (média '+g.cardsTip.avg.toFixed(0)+'%).', reason: g.home+' '+g.cardsTip.hPct+'% · '+g.away+' '+g.cardsTip.aPct+'% dos jogos com +3.5 cartões.'});
   return '<div class="match-card">'
-    + '<div class="match-top"><div class="teams">'+g.teams[g.home]+'<span class="vs">vs</span>'+g.teams[g.away]+'</div>'
+    + '<div class="match-top"><div class="teams">'+g.home+'<span class="vs">vs</span>'+g.away+'</div>'
     + '<div class="datetime">'+g.time+'</div></div>'
-    + barHtml
-    + '<div class="tips">' + t.rows.map(tipRowHtml).join('') + '</div>'
-    + (t.tier ? '<div class="match-footer"><span class="stamp '+t.tier+'">'+tierLabel(t.tier)+'</span></div>' : '')
+    + '<div class="tips">' + rows.map(tipRowHtml).join('') + '</div>'
+    + '<div class="match-footer"><span class="stamp '+g.pick.tier+'">'+tierLabel(g.pick.tier)+'</span></div>'
     + '</div>';
-}
-
-function brMatchCardHtml(g){
-  const t = brTips(g);
-  return '<div class="match-card">'
-    + '<div class="match-top"><div class="teams">'+BR_TEAM_STATS[g.home].name+'<span class="vs">vs</span>'+BR_TEAM_STATS[g.away].name+'</div>'
-    + '<div class="datetime">'+g.time+'</div></div>'
-    + '<div class="tips">' + t.rows.map(tipRowHtml).join('') + '</div>'
-    + '<div class="match-footer"><span class="stamp '+t.tier+'">'+tierLabel(t.tier)+'</span></div>'
-    + '</div>';
-}
-
-function resultsGridHtml(results){
-  if(!results || results.length === 0) return '<div class="no-results">Sem resultados ainda — temporada não começou.</div>';
-  return '<div class="results-grid">' + results.map(r =>
-    '<div class="result-card"><div class="rteams">'+r.home+'<br>'+r.away+'</div><div class="rscore">'+r.score+'</div></div>'
-  ).join('') + '</div>';
-}
-
-function brStandingsHtml(){
-  const rows = BR_STANDINGS.map(r => {
-    const sg = r.gp - r.gc;
-    const zone = r.pos <= 6 ? 'zone-g6' : r.pos >= 17 ? 'zone-z4' : '';
-    return '<tr class="'+zone+'"><td class="pos num">'+r.pos+'</td><td class="team-name">'+BR_TEAM_STATS[r.abbr].name+'</td>'
-      + '<td class="pts">'+r.pts+'</td><td class="num">'+r.j+'</td><td class="num">'+r.v+'</td><td class="num">'+r.e+'</td><td class="num">'+r.d+'</td>'
-      + '<td class="num">'+r.gp+'</td><td class="num">'+r.gc+'</td><td class="num">'+(sg>=0?'+':'')+sg+'</td></tr>';
-  }).join('');
-  return '<div class="standings-wrap"><table class="standings"><thead><tr>'
-    + '<th>#</th><th>Time</th><th>Pts</th><th>J</th><th>V</th><th>E</th><th>D</th><th>GP</th><th>GC</th><th>SG</th>'
-    + '</tr></thead><tbody>' + rows + '</tbody></table></div>'
-    + '<div class="postponed-note">Verde = G6 (Libertadores) · Vermelho = Z4 (rebaixamento). Fonte: Lance!, até a 22ª rodada.</div>';
-}
-
-function mlsStandingsHtml(){
-  const rows = MLS_STANDINGS.map(r => {
-    const j = r.v + r.e + r.d;
-    const zone = r.pos <= 8 ? 'zone-g6' : '';
-    return '<tr class="'+zone+'"><td class="pos num">'+r.pos+'</td><td class="team-name">'+r.name+'</td>'
-      + '<td class="pts">'+r.pts+'</td><td class="num">'+j+'</td><td class="num">'+r.v+'</td><td class="num">'+r.e+'</td><td class="num">'+r.d+'</td></tr>';
-  }).join('');
-  return '<div class="standings-wrap"><table class="standings"><thead><tr>'
-    + '<th>#</th><th>Time</th><th>Pts</th><th>J</th><th>V</th><th>E</th><th>D</th>'
-    + '</tr></thead><tbody>' + rows + '</tbody></table></div>'
-    + '<div class="postponed-note">Verde = zona de playoffs (top 8, tabela geral combinada). Fonte: Sportradar, temporada 2026 até 01/08.</div>';
 }
 
 // ---------- Build panels ----------
 const panelsEl = document.getElementById('panels');
 const tabsEl = document.getElementById('tabs');
+document.getElementById('generated-at').textContent = DATA.generatedAt;
 
-// Resumo panel (top picks)
+// Resumo panel (top picks across every league)
 const topPicks = [];
-EU_LEAGUES.forEach(l => l.games.forEach(g => {
-  const p = euPickInfo(g);
-  if(p && p.tier === 'alta') topPicks.push({league:l.name, teams:g.teams[g.home]+' vs '+g.teams[g.away], time:g.time, label:p.label, pct:p.pct.toFixed(0)+'%', tier:p.tier});
-}));
-BR_GAMES.forEach(g => {
-  const pick = brPickInfo(g.home, g.away);
-  if(pick.tier === 'alta'){
-    topPicks.push({league:'Brasileirão', teams:BR_TEAM_STATS[g.home].name+' vs '+BR_TEAM_STATS[g.away].name, time:g.time, label:pick.label, pct:null, tier:pick.tier});
-  }
+Object.values(DATA.leagues).forEach(league => {
+  league.games.forEach(g => {
+    if(!g.noData && g.pick.tier === 'alta'){
+      topPicks.push({league: league.name, teams: g.home+' vs '+g.away, time: g.time, label: g.pick.label, tier: g.pick.tier});
+    }
+  });
 });
 
 const resumoPanel = document.createElement('div');
 resumoPanel.className = 'section-panel active';
 resumoPanel.id = 'panel-resumo';
-resumoPanel.innerHTML = '<div class="section-label">Top picks entre todas as ligas</div><div class="top-strip">'
-  + topPicks.slice(0,8).map(t =>
-      '<div class="stamp-card"><div class="league-tag">'+t.league+'</div>'
-      + '<div class="pick-team">'+t.label+'</div>'
-      + '<div class="vs-line">'+t.teams+' · '+t.time+'</div>'
-      + '<span class="stamp '+t.tier+'">'+tierLabel(t.tier)+(t.pct ? ' · '+t.pct : '')+'</span></div>'
-    ).join('')
-  + '</div>';
+resumoPanel.innerHTML = topPicks.length
+  ? '<div class="section-label">Top picks entre todas as ligas</div><div class="top-strip">'
+    + topPicks.map(t =>
+        '<div class="stamp-card"><div class="league-tag">'+t.league+'</div>'
+        + '<div class="pick-team">'+t.label+'</div>'
+        + '<div class="vs-line">'+t.teams+' · '+t.time+'</div>'
+        + '<span class="stamp '+t.tier+'">'+tierLabel(t.tier)+'</span></div>'
+      ).join('')
+    + '</div>'
+  : '<div class="no-results">Nenhum jogo com alta confiança nesta rodada.</div>';
 panelsEl.appendChild(resumoPanel);
 
-// EU league panels (+ MLS, which is in-season but lacks per-team goal/corner/card stats from this source)
-EU_LEAGUES.forEach(l => {
-  const isMls = l.key === 'mls';
-  const reason = isMls ? MLS_REASON : EU_REASON;
+// Um painel por liga
+const TABS = [{key:'resumo', label:'Resumo'}];
+Object.entries(DATA.leagues).forEach(([key, league]) => {
+  TABS.push({key, label: league.name});
+
   const panel = document.createElement('div');
   panel.className = 'section-panel';
-  panel.id = 'panel-' + l.key;
-  panel.innerHTML = '<div class="league-method">Resultado: modelo preditivo real · Gols, escanteios e cartões: '+(isMls ? 'sem essa estatística nesta fonte' : 'indisponíveis (pré-temporada)')+'</div>'
-    + '<div class="match-grid">' + l.games.map(g => euMatchCardHtml(g, reason)).join('') + '</div>'
-    + '<div class="section-label results">Resultados recentes</div>'
-    + resultsGridHtml(isMls ? MLS_RESULTS : [])
-    + '<div class="section-label results">Tabela de classificação</div>'
-    + (isMls ? mlsStandingsHtml() : '<div class="no-results">Tabela ainda não existe — temporada 2026/27 não começou (0 jogos disputados).</div>');
+  panel.id = 'panel-' + key;
+  let gamesHtml;
+  if(!league.games.length){
+    gamesHtml = '<div class="no-results">Sem jogos encontrados para a próxima rodada.</div>';
+  } else if(league.games.every(g => g.noData)){
+    gamesHtml = '<div class="no-results">Temporada ainda não começou nesta liga — sem jogos disputados na APWin.</div>';
+  } else {
+    gamesHtml = '<div class="match-grid">' + league.games.map(matchCardHtml).join('') + '</div>';
+  }
+  panel.innerHTML = '<div class="league-method">Resultado, gols, escanteios e cartões: heurística própria a partir de tabela e médias de temporada (APWin)</div>' + gamesHtml;
   panelsEl.appendChild(panel);
 });
-
-// Brasileirão panel
-const brPanel = document.createElement('div');
-brPanel.className = 'section-panel';
-brPanel.id = 'panel-brasileirao';
-brPanel.innerHTML = '<div class="league-method">Resultado e gols: heurística própria a partir da tabela (CBF/Lance!) · Escanteios e cartões: médias reais de temporada (APWin)</div>'
-  + '<div class="match-grid">' + BR_GAMES.map(brMatchCardHtml).join('') + '</div>'
-  + '<div class="section-label results">Resultados da 22ª rodada</div>'
-  + resultsGridHtml(BR_RESULTS)
-  + '<div class="section-label results">Tabela de classificação</div>'
-  + brStandingsHtml();
-panelsEl.appendChild(brPanel);
 
 // Tabs
 TABS.forEach((t, i) => {
