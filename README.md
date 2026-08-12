@@ -135,3 +135,24 @@ mudar alguma coisa no site (layout, bloqueio de bot), o GitHub Actions vai
 falhar todo dia até alguém corrigir — vale configurar notificação de falha do
 workflow (GitHub avisa por e-mail automaticamente quando uma Action falha, já
 vem ativado por padrão).
+
+## Histórico de estatísticas
+
+Cada vez que `scripts/build.js` roda, ele também salva um retrato do dia em
+`history.json` (tabela completa + o palpite dado pra cada jogo em cada
+mercado) — sem apagar os dias anteriores, só empilhando. Isso é o que
+permite, mais pra frente, comparar palpite com resultado real e ver a
+evolução da tabela rodada a rodada. Guarda os últimos 180 dias por padrão
+(dá pra mudar isso em `appendToHistory()` dentro do `build.js`).
+
+O `history.json` também é commitado pelo workflow automático — então ele vai
+crescendo sozinho junto com o `index.html`, sem você precisar mexer em nada.
+
+## Tabela de classificação
+
+O boletim já mostra a tabela completa (posição, pontos, jogos, V/E/D, gols)
+do Brasileirão e da MLS, direto na aba de cada liga — dado real. As ligas
+europeias mostram um aviso de que a tabela ainda não existe, porque a
+temporada 2026/27 não começou (0 jogos disputados) — assim que começar, o
+`scrapeStandings()` do `scrape.js` já vai preencher isso também, sem
+precisar mudar nada no template.

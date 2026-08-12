@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(node \"C:\\\\Users\\\\ander\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ander-Documents-projetos-jogos\\\\272da889-12ff-44c9-a343-c0d73fe400db\\\\scratchpad\\\\test-fetch.js\")",
+      "Bash(cp \"C:\\\\Users\\\\ander\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-ander-Documents-projetos-jogos\\\\272da889-12ff-44c9-a343-c0d73fe400db\\\\scratchpad\\\\test-fetch.js\" ./scripts/_test-fetch.js)",
+      "Bash(node ./scripts/_test-fetch.js)",
+      "Bash(node scripts/_test-fetch.js)",
+      "Bash(node -e ' *)",
+      "Bash(grep -n \"const DATA = \\\\|Injetado pelo\\\\|^const EU_LEAGUES\\\\|</script>\\\\|^}\\);$\\\\|tabsEl.appendChild\\(btn\\);\" templates/boletim-template.html)",
+      "Bash(node scripts/build.js)",
+      "Bash(where python *)",
+      "Bash(where npx *)",
+      "Bash(python -m http.server 8811)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:8811/index.html)",
+      "Bash(rm -rf \"/c/Users/ander/Documents/projetos_jogos/boletim-apostas-project/boletim-apostas-project/.claude\")",
+      "PowerShell(Stop-Process -Id 13612 -Force -ErrorAction SilentlyContinue; Get-Process -Name python -ErrorAction SilentlyContinue | Where-Object {$_.Id -eq 13612})",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" --max-time 2 http://localhost:8811/index.html)",
+      "Bash(rm -f \"/c/Users/ander/Documents/projetos_jogos/.claude/launch.json\")",
+      "Bash(rmdir \"/c/Users/ander/Documents/projetos_jogos/.claude\")",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(git ls-remote *)"
+    ]
+  }
+}
